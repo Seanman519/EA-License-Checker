@@ -1,18 +1,21 @@
 # Import additional modules
 import logging
-from fastapi import FastAPI
-from fastapi import Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 from datetime import datetime, timedelta
+from pymongo import MongoClient  # Import MongoClient from pymongo
 from typing import List
 
 app = FastAPI()
 
-
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# MongoDB connection
+client = MongoClient('mongodb://localhost:27017/')  
+db = client['ea-checker']  
+license_collection = db['licenses'] 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -68,8 +71,7 @@ async def activate_license(license_key: str, ip_address: str, current_user: User
     return {"message": "License activated successfully"}
 
 # Endpoint for deactivating a license (requires authentication)
-#still to implement..already fucked from the other functions
-
+# Still to implement
 
 # Endpoint for verifying a license (requires authentication)
 @app.post("/verify-license/")
